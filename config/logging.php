@@ -60,9 +60,31 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
-            'level' => env('LOG_LEVEL', 'debug'),
-            'replace_placeholders' => true,
+            'path'   => base_path('auth.log'),
+            'level'  => 'info',
+            'tap'    => [App\Logging\CustomizeAuthLogger::class],
+        ],
+
+        // ★ ส่งออกหน้าจอ
+        'stdout' => [
+            'driver'  => 'monolog',
+            'handler' => StreamHandler::class,
+            'with'    => ['stream' => 'php://stdout'],
+            'level'   => env('LOG_LEVEL', 'debug'),
+        ],
+
+        // ★ auth.log ที่ root
+        'authlog' => [
+            'driver' => 'single',
+            'path'   => base_path('auth.log'),
+            'level'  => 'info',
+        ],
+
+        // ★ stack สำหรับ auth: เข้าทั้งไฟล์ + stdout
+        'authlog_stack' => [
+            'driver'   => 'stack',
+            'channels' => ['authlog', 'stdout'],
+            'ignore_exceptions' => false,
         ],
 
         'daily' => [

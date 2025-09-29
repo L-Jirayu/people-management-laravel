@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -100,20 +101,16 @@ class EmployeeController extends Controller
 
         $rows = $query->orderBy('id', 'asc')->get();
 
+        $generatedAt = Carbon::now('Asia/Bangkok')->format('Y-m-d H:i') . ' UTC+7';
+
         $pdf = Pdf::loadView('employees.pdf', [
-                'rows' => $rows,
-                'q'    => $q,
-                'generated_at' => now()->format('Y-m-d H:i')
+                'rows'         => $rows,
+                'q'            => $q,
+                'generated_at' => $generatedAt
             ])
-            ->setPaper('a4', 'landscape')
-            ->setOption([
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled'      => false,
-                'dpi'                  => 96,
-                'defalutFont'          => 'NotoSansThai',
-            ]);
+            ->setPaper('a4', 'landscape');
 
         $filename = $q ? "employees_".preg_replace('/\W+/', '_', $q).".pdf" : "employees.pdf";
-        return $pdf->stream($filename);   // หรือ ->stream($filename) ถ้าอยากเปิดในเบราว์เซอร์
+        return $pdf->stream($filename);
     }
 }

@@ -16,5 +16,5 @@ Route::middleware('auth.mock')->group(function () {
     Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-    Route::get('/employees/export/pdf', [\App\Http\Controllers\EmployeeController::class, 'exportPdf'])->name('employees.export.pdf');
+    Route::get('/employees/export/pdf', [EmployeeController::class, 'exportPdf'])->name('employees.export.pdf');
 });

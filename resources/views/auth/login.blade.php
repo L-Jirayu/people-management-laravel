@@ -1,4 +1,3 @@
-{{-- resources/views/auth/login.blade.php --}}
 @extends('layout')
 @section('content')
 <div class="card" style="max-width:720px; margin:48px auto 0">
