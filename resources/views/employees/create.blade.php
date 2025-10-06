@@ -11,12 +11,12 @@
   </div>
 </div>
 
-<div class="card" style="max-width:1040px">
+<div class="card" style="max-width:1040px; margin:auto;">
   @if ($errors->any())
     <div class="subtitle" style="color:#9b1c1c; margin-bottom:12px">กรอกข้อมูลให้ถูกต้อง</div>
   @endif
 
-  <form method="post" action="{{ route('employees.store') }}">
+  <form method="post" action="{{ route('employees.store') }}" enctype="multipart/form-data">
     @csrf
     <div class="row-3">
       <div class="field">
@@ -68,6 +68,12 @@
         </select>
       </div>
     </div>
+
+    <div class="field">
+      <label>แนบไฟล์ (หลายไฟล์ได้, จำกัด 10MB ต่อไฟล์)</label>
+      <input type="file" name="attachments[]" multiple>
+    </div>
+
 
     <div class="mt-3">
       <button class="btn btn-primary" type="submit">Create</button>

@@ -17,4 +17,6 @@ Route::middleware('auth.mock')->group(function () {
     Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
     Route::get('/employees/export/pdf', [EmployeeController::class, 'exportPdf'])->name('employees.export.pdf');
+    Route::get('/upload', [UploadController::class, 'form'])->name('upload.form');
+    Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 });

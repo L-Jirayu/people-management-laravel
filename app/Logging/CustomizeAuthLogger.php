@@ -4,42 +4,37 @@ namespace App\Logging;
 
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Carbon\Carbon;
 
 class CustomizeAuthLogger
 {
     /**
-     * เรียกโดย Laravel เพื่อตกแต่ง logger หลังสร้าง channel แล้ว
+     * Tap the given logger instance.
+     *
+     * NOTE (Monolog v3):
+     * - ไม่มี setDateTimeFormat() แล้ว
+     * - timezone จะอิงตาม config('app.timezone') ที่ Laravel set ไว้ด้วย date_default_timezone_set
      */
-    public function __invoke($logger)
+    public function __invoke($logger): void
     {
-        // ตั้ง timezone ให้แน่ใจว่าเป็น Asia/Bangkok
-        $tz = new \DateTimeZone('Asia/Bangkok');
-
-        // รูปแบบที่ต้องการ:
-        // [2025-09-29 21:27:43 UTC+7] local.INFO: ข้อความ
+        // ต้องการรูปแบบ:
+        // [YYYY-MM-DD HH:MM:SS UTC+7] local.INFO: ข้อความ ...
         $format = "[%datetime% UTC+7] %channel%.%level_name%: %message% %context% %extra%\n";
 
+        // กำหนด date format ผ่าน constructor (ถูกกับ Monolog v3)
         $formatter = new LineFormatter(
             $format,
-            'Y-m-d H:i:s', // รูปแบบ datetime
+            'Y-m-d H:i:s', // date format
             true,          // allowInlineLineBreaks
             true           // ignoreEmptyContextAndExtra
         );
 
         foreach ($logger->getHandlers() as $handler) {
-            // ใช้เฉพาะ StreamHandler (single file)
             if ($handler instanceof StreamHandler) {
-                // ตั้ง timezone ให้ handler
                 $handler->setFormatter($formatter);
-                $handler->getFormatter()->setDateTimeFormat('Y-m-d H:i:s');
             }
         }
 
-        // บังคับให้ตัว Logger ใช้ timezone Asia/Bangkok
-        if (method_exists($logger, 'setTimezone')) {
-            $logger->setTimezone($tz);
-        }
+        // ไม่ต้อง setTimezone ใน logger แล้ว (Monolog v3 ตัดทิ้ง)
+        // ให้ตั้ง timezone ที่ config/app.php => 'timezone' => 'Asia/Bangkok'
     }
 }

@@ -18,5 +18,12 @@ class Employee extends Model
         'salary',
         'hired_date',
         'status',
+        'attachments',
+    ];
+
+    protected $casts = [
+        'hired_date' => 'date',
+        'salary'     => 'decimal:2',
+        'attachments' => 'array',
     ];
 }

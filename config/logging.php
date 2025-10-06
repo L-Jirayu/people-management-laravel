@@ -87,6 +87,20 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        // ★ upload.log ที่ root
+        'uploadlog' => [
+            'driver' => 'single',
+            'path'   => base_path('upload.log'),
+            'level'  => 'info',
+        ],
+
+        // ★ stack สำหรับ upload: เข้าทั้งไฟล์ + stdout (เวลารัน serve จะเห็น)
+        'uploadlog_stack' => [
+            'driver'   => 'stack',
+            'channels' => ['uploadlog', 'stdout'],
+            'ignore_exceptions' => false,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
